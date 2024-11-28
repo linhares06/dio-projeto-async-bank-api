@@ -14,6 +14,13 @@ class UserIn(BaseModel):
     password: str
 
 
+class UserRoleIn(UserIn):
+    role_id: Role
+
+    class Config:
+        use_enum_values = True
+
+
 class UserUpdateIn(BaseModel):
     name: str 
     password: str

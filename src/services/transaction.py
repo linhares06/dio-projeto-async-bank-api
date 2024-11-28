@@ -61,7 +61,7 @@ class TransactionService:
 
         Raises:
             AccountNotFoundError: If the account with the given ID does not exist.
-            ForbiddenAccountAccess: If the current user does not have permission to access the account.
+            ForbiddenAccountAccess: If the current user does not have permission to access the transaction.
         """
         total = await AccountService.count(account_id)
         if not total:

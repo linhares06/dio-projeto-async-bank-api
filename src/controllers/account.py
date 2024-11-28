@@ -37,6 +37,7 @@ async def list_accounts_by_user(user_id: int):
             detail="User not found"
         )
 
+
 @router.get("/me", response_model=AccountOut)
 async def read_my_info(current_user: dict[str, str] = Depends(login_required)):
     return await service.read(int(current_user["user_id"]))

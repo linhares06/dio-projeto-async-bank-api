@@ -4,6 +4,8 @@ import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
 from src.config import settings
+from src.schemas.user import UserRoleIn
+from src.services.user import UserService
 
 settings.database_url = "sqlite:///tests.db"
 
@@ -42,6 +44,22 @@ async def client(db):
 
 
 @pytest_asyncio.fixture
-async def access_token(client: AsyncClient):
-    response = await client.post("/auth/login", json={"user_id": 1})
+async def access_token_client(client: AsyncClient):
+    service = UserService()
+    await service.create(UserRoleIn(name="Test1", cpf="11111111111", password="12345678", role_id="CLIENT"))
+
+    data: dict = {"cpf": "11111111111",  "password": "12345678"} 
+    response = await client.post("/auth/login", json=data)
+
+    return response.json()["access_token"]
+
+
+@pytest_asyncio.fixture
+async def access_token_manager(client: AsyncClient):
+    service = UserService()
+    await service.create(UserRoleIn(name="Test1", cpf="11111111111", password="12345678", role_id="MANAGER"))
+
+    data: dict = {"cpf": "11111111111",  "password": "12345678"} 
+    response = await client.post("/auth/login", json=data)
+
     return response.json()["access_token"]
